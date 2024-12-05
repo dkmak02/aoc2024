@@ -122,7 +122,7 @@ static void Solve2(List<List<int>> orders, List<List<int>> updates)
         {
             toFix = FixUpdate(orders, update);
         }
-        res += update[update.Count / 2];
+        res += toFix[update.Count / 2];
             
         
     }
