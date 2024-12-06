@@ -68,10 +68,10 @@ class Program
         var iter = 0;
         var directionList = new List<string> { "N", "E", "S", "W" };
         string direction = FindDirection(data[location.Item1][location.Item2]);
-
+        var loop = new HashSet<((int, int),string)>();
         visited.Add(location);
 
-        while (!CheckIfOut(location, data.Count, data[0].Count) && iter <1000)
+        while (!CheckIfOut(location, data.Count, data[0].Count))
         {
             var nextLocation = Move(location, direction);
             if(CheckIfOut(nextLocation, data.Count, data[0].Count))
@@ -86,16 +86,17 @@ class Program
             else
             {
                 location = nextLocation;
-                if(visited.Contains(location))
+                if(loop.Contains((location, direction)))
+                {
+                    return true;
+                }
+                loop.Add((location, direction));
+                if (visited.Contains(location))
                 {
                     iter++;
                 }
                 visited.Add(location);
             }
-        }
-        if (iter > 999)
-        {
-            return true;
         }
         return false;
     }
