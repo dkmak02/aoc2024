@@ -93,7 +93,6 @@ class Program
                 visited.Add(location);
             }
         }
-       // Console.WriteLine(visited.Count);
         if (iter > 999)
         {
             return true;
@@ -122,13 +121,8 @@ class Program
             {
                 if (data[i][j] == '.')
                 {
-                    // Create a deep copy of the data
                     var newData = DeepCopy(data);
-
-                    // Change the current position to '#'
                     newData[i][j] = '#';
-
-                    // Check if Solve1 returns true (guard path logic)
                     if (Solve1(newData))
                     {
                         res++;
