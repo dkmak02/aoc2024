@@ -90,6 +90,7 @@ void Solve2(List<int> files, List<int> freeSpace)
 {
     BigInteger res = 0;
     var finalBuilder = new List<string>();
+
     for (int i = 0; i < files.Count; i++)
     {
         for (int j = 0; j < files[i]; j++)
@@ -104,84 +105,63 @@ void Solve2(List<int> files, List<int> freeSpace)
             }
         }
     }
+    File.WriteAllText("C:\\Users\\dkmak\\Desktop\\aoc2024\\day09\\output2.txt", string.Join("", finalBuilder));
 
-    
-    int endIndex = finalBuilder.Count-1;
-    int endStartIndex = 0;
-    
-    var temp = "s";
-    var trueS = 0;
-    while (0 < endIndex)
+    for (int fileId = files.Count - 1; fileId >= 0; fileId--)
     {
-        int startIndex = 0;
-        var needsSpace = 0;
-        int startEndIndex = finalBuilder.Count;
-        while (endIndex > startIndex && finalBuilder[endIndex] == ".")
-        {
-            endIndex--;
-        }
-        if(endIndex <= 0)
-        {
-            break;
-        }
-        endStartIndex = endIndex;
-        temp = finalBuilder[endIndex];
-        while (finalBuilder[endStartIndex] == temp)
-        {
-            endStartIndex--;
-            if(endStartIndex < 0)
-            {
-                break;
-            }
-            
-        }
-        if (endStartIndex < 0)
-        {
-            break;
-        }
-        var xd = finalBuilder.Slice(endStartIndex+1, endIndex - endStartIndex);
+        var fileStr = fileId.ToString();
+        var fileIndices = new List<int>();
 
-        while (startIndex < endIndex && finalBuilder[startIndex] != ".")
+        for (int i = 0; i < finalBuilder.Count; i++)
         {
-            startIndex++;
-        }
-        startIndex--;
-        startEndIndex = startIndex;
-        while (true)
-        {
-            if(startEndIndex-startIndex == endIndex - endStartIndex)
+            if (finalBuilder[i] == fileStr)
             {
-                for (int i = 0; i < endIndex - endStartIndex; i++)
+                fileIndices.Add(i);
+            }
+        }
+
+        if (fileIndices.Count == 0) continue; 
+
+        int fileLength = fileIndices.Count;
+        int firstIndex = fileIndices[0];
+
+        for (int i = 0; i <= firstIndex; i++)
+        {
+            bool hasEnoughSpace = true;
+            for (int j = i; j < i + fileLength; j++)
+            {
+                if (j >= finalBuilder.Count || finalBuilder[j] != ".")
                 {
-                    finalBuilder[startIndex+1 + i] = finalBuilder[endStartIndex + 1 + i];
-                    finalBuilder[endStartIndex+1+ i] = ".";
+                    hasEnoughSpace = false;
+                    break;
                 }
-                startIndex = 0;
-                endIndex = endStartIndex;
-                trueS = startIndex;
-                break;
             }
-            startEndIndex++;
-            if(startEndIndex >= endStartIndex)
+
+            if (hasEnoughSpace)
             {
-                endIndex = endStartIndex;
-                break;
-            }
-            if(finalBuilder[startEndIndex] != ".")
-            {
-                startIndex = startEndIndex;
+                foreach (var index in fileIndices)
+                {
+                    finalBuilder[index] = ".";
+                }
+                for (int j = 0; j < fileLength; j++)
+                {
+                    finalBuilder[i + j] = fileStr;
+                }
+
+                break; 
             }
         }
+        //output finalBuilder
+       // Console.WriteLine(string.Join("", finalBuilder));
+
     }
 
     for (int i = 0; i < finalBuilder.Count; i++)
     {
         if (finalBuilder[i] != ".")
         {
-
-            var temp1 = BigInteger.Parse(finalBuilder[i].ToString()) * i;
-            res += temp1;
-
+            var value = BigInteger.Parse(finalBuilder[i]);
+            res += value * i;
         }
     }
 
@@ -190,7 +170,7 @@ void Solve2(List<int> files, List<int> freeSpace)
 void Main()
 {
     var (files,freeSpace) = GetInput();
-    //Solve1(files, freeSpace);
+    Solve1(files, freeSpace);
     Solve2(files, freeSpace);
 }
 Main();
